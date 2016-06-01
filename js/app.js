@@ -1,16 +1,21 @@
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function(x, y) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-
+    console.log(x, y);
+    console.log(Enemy.render);
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+    this.x = x;
+    this.y = y;
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
+    this.x = this.x + (65 * dt);
+    
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -23,12 +28,47 @@ Enemy.prototype.render = function() {
 
 // Now write your own player class
 // This class requires an update(), render() and
-// a handleInput() method.
+// a handleInput() method.    }
+
 
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
+var allEnemies = [];
+
+var bug1 = new Enemy(50, 65);
+var bug2 = new Enemy(0, 150);
+allEnemies.push(bug1, bug2);
+
 // Place the player object in a variable called player
+var player = {    
+    'update' : function () {
+        this.x = 200;
+        this.y = 400;
+    },
+    
+    'render' : function () {
+        ctx.drawImage(Resources.get('images/char-boy.png'), this.x, this.y);
+    },
+    
+    'handleInput' : function (keyPress) {
+        switch (keyPress) {
+            case 'left' :
+                console.log('I pressed the left key');
+                break;
+            case 'up' :
+                console.log('I pressed the up key');
+                this.y = this.y + 350;
+                break;
+            case 'right' :
+                console.log('I pressed the right key');
+                break;
+            case 'down' :
+                console.log('I pressed the down key');
+                break;
+        }   
+    }
+};
 
 
 
