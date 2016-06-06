@@ -229,6 +229,9 @@ var Engine = (function(global) {
                 break;
         }
     }
+    
+    var resetInput = function(keyPress) {
+    }
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
@@ -249,3 +252,15 @@ var Engine = (function(global) {
      */
     global.ctx = ctx;
 })(this);
+
+document.addEventListener('keyup', function(e) {
+    var allowedKeys = {
+        37: 'left',
+        38: 'up',
+        39: 'right',
+        40: 'down'
+    };
+    
+    player.handleInput(allowedKeys[e.keyCode]);
+    
+});
