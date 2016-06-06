@@ -47,6 +47,7 @@ var Engine = (function(global) {
          */
         update(dt);
         render();
+        reset();
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
@@ -64,7 +65,7 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        reset();
+        reset('gameStart');
         lastTime = Date.now();
         main();
     }
@@ -84,8 +85,13 @@ var Engine = (function(global) {
     }
 
     function checkCollisions() {
+        function between(x, min, max) {
+            return x >= min && x <= max;
+        }
+        
+        //loops through the allEnemies array and checks the players position against the enemies, using a range given to the between function above
         for(var i = 0; i < allEnemies.length; i++) {
-            if((allEnemies[i].x === player.x) && (allEnemies[i].y === player.y)) {
+            if((between(allEnemies[i].x, player.x - 50, player.x + 50)) && (between(allEnemies[i].y, player.y - 50, player.y + 50))) {
                 console.log('error');
             }
         }
@@ -166,8 +172,62 @@ var Engine = (function(global) {
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
      */
-    function reset() {
-        // noop
+    var lastState = undefined;
+    
+    function reset(state) {
+        //this keeps the last state that was sent to the reset function or stores a new state
+        if(state === undefined) {
+            state = lastState
+        }
+        
+        else {
+            lastState = state;
+        }
+        
+        //shared variables for when the overlay is on
+        var on = function() {
+            ctx.globalAlpha = 0.7;
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 48, 505, 550)
+            
+            ctx.globalAlpha = 1;
+            ctx.font = '30px serif';
+            ctx.fillStyle = 'white'
+            ctx.fillText('press any key to continue', 100, 550);
+        }
+        
+        switch(state) {
+            case 'gameStart' : 
+                on();
+                
+                ctx.fillText('Good Luck', 185, 350);
+                
+                ctx.font = '55px serif';
+                ctx.fillText('Welcome', 152, 300)
+                break;
+            case 'gameOver' : 
+                on();
+                
+                ctx.font = '55px serif';
+                ctx.fillText('Game Over', 100, 300)
+                break;
+            case 'gameWon' : 
+                on();
+                
+                ctx.fillText('You Won', 185, 350);
+                
+                ctx.font = '55px serif';
+                ctx.fillText('Congratulations', 152, 300)
+                break;
+            case 'gamePaused' : 
+                on();
+                
+                ctx.font = '55px serif';
+                ctx.fillText('Paused', 100, 300)
+                break;
+            case 'off' : 
+                break;
+        }
     }
 
     /* Go ahead and load all of the images we know we're going to need to

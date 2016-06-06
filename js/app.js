@@ -82,6 +82,8 @@ var player = {
                 console.log('I pressed the down key');
                 this.y += 83;
                 break;
+            default : 
+                reset('off');
         }   
     }
 };
@@ -97,6 +99,6 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
+    
     player.handleInput(allowedKeys[e.keyCode]);
 });
