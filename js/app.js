@@ -14,7 +14,11 @@ var Enemy = function(x, y) {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    this.x = this.x + (65 * dt);
+    this.x = this.x + (50 * dt);
+    //x bounds reset
+    if(this.x < 0) {this.x = 404}
+    else if(this.x > 404) {this.x = 0}
+    console.log(this.x, this.y);
     
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
@@ -36,15 +40,24 @@ Enemy.prototype.render = function() {
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [];
 
-var bug1 = new Enemy(50, 65);
-var bug2 = new Enemy(0, 150);
+var bug1 = new Enemy(101, 68);
+var bug2 = new Enemy(0, 151);
 allEnemies.push(bug1, bug2);
 
 // Place the player object in a variable called player
 var player = {    
+    //initial player position
+    x : 202,
+    y : 400,
+    
     'update' : function () {
-        this.x = 200;
-        this.y = 400;
+        console.log(this.x, this.y);
+        //x bounds reset
+        if(this.x < 0) {this.x = 404}
+        else if(this.x > 404) {this.x = 0}
+        //y bounds reset
+        if(this.y <= 0) {this.y = 400}
+        else if(this.y > 400) {this.y = 400}
     },
     
     'render' : function () {
@@ -55,16 +68,19 @@ var player = {
         switch (keyPress) {
             case 'left' :
                 console.log('I pressed the left key');
+                this.x -= 101;
                 break;
             case 'up' :
                 console.log('I pressed the up key');
-                this.y = this.y + 350;
+                this.y -= 83;
                 break;
             case 'right' :
                 console.log('I pressed the right key');
+                this.x += 101;
                 break;
             case 'down' :
                 console.log('I pressed the down key');
+                this.y += 83;
                 break;
         }   
     }
