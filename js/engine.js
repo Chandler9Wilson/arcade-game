@@ -203,13 +203,13 @@ var Engine = (function(global) {
                 ctx.fillText('Good Luck', 185, 350);
                 
                 ctx.font = '55px serif';
-                ctx.fillText('Welcome', 152, 300)
+                ctx.fillText('Welcome', 152, 300);
                 break;
             case 'gameOver' : 
                 on();
                 
                 ctx.font = '55px serif';
-                ctx.fillText('Game Over', 100, 300)
+                ctx.fillText('Game Over', 100, 300);
                 break;
             case 'gameWon' : 
                 on();
@@ -217,20 +217,30 @@ var Engine = (function(global) {
                 ctx.fillText('You Won', 185, 350);
                 
                 ctx.font = '55px serif';
-                ctx.fillText('Congratulations', 152, 300)
+                ctx.fillText('Congratulations', 152, 300);
                 break;
             case 'gamePaused' : 
                 on();
                 
                 ctx.font = '55px serif';
-                ctx.fillText('Paused', 100, 300)
+                ctx.fillText('Paused', 175, 300);
                 break;
             case 'off' : 
+                ctx.font = '20px serif';
+                ctx.fillText('press escape to pause', 10, 100);
                 break;
         }
     }
     
     var resetInput = function(keyPress) {
+        if(keyPress === 27) {
+            reset('gamePaused');
+            console.log('bs');
+        }
+
+        else if(keyPress !== undefined && keyPress !== 27) {
+            reset('off');
+        }
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -251,16 +261,18 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+    
+    document.addEventListener('keyup', function(e) {
+        var allowedKeys = {
+            37: 'left',
+            38: 'up',
+            39: 'right',
+            40: 'down',
+            27: 'escape'
+        };
+        
+        resetInput(allowedKeys[e.keyCode]);
+        player.handleInput(allowedKeys[e.keyCode]);
+        
+    });
 })(this);
-
-document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-    };
-    
-    player.handleInput(allowedKeys[e.keyCode]);
-    
-});

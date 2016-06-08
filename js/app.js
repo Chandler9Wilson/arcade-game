@@ -2,8 +2,8 @@
 var Enemy = function(x, y) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-    console.log(x, y);
-    console.log(Enemy.render);
+    //console.log(x, y);
+    //console.log(Enemy.render);
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
@@ -18,7 +18,7 @@ Enemy.prototype.update = function(dt) {
     //x bounds reset
     if(this.x < 0) {this.x = 404}
     else if(this.x > 404) {this.x = 0}
-    console.log(this.x, this.y);
+    //console.log(this.x, this.y);
     
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
@@ -51,7 +51,7 @@ var player = {
     y : 400,
     
     'update' : function () {
-        console.log(this.x, this.y);
+        //console.log(this.x, this.y);
         //x bounds reset
         if(this.x < 0) {this.x = 404}
         else if(this.x > 404) {this.x = 0}
