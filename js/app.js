@@ -1,19 +1,23 @@
 // Enemies our player must avoid
-var Enemy = function(x, y) {
+var Enemy = function(x, y, velocity) {
     //shared variables for all enemies
     this.sprite = 'images/enemy-bug.png';
     this.x = x;
     this.y = y;
+    this.velocity = velocity;
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    this.x = this.x + (50 * dt);
+    this.x = this.x + (this.velocity * dt);
+    
+    
     //x bounds reset
     if (this.x < 0) {
         this.x = 404;
-    } else if (this.x > 404) {
+    } 
+    else if (this.x > 404) {
         this.x = 0;
     }
 };
@@ -26,8 +30,8 @@ Enemy.prototype.render = function() {
 // all enemy objects in an array called allEnemies
 var allEnemies = [];
 
-var bug1 = new Enemy(101, 68);
-var bug2 = new Enemy(0, 151);
+var bug1 = new Enemy(101, 68, 70);
+var bug2 = new Enemy(0, 151, -75);
 allEnemies.push(bug1, bug2);
 
 // Place the player object in a variable called player
