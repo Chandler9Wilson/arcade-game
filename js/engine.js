@@ -92,7 +92,9 @@ var Engine = (function(global) {
         //loops through the allEnemies array and checks the players position against the enemies, using a range given to the between function above
         for(var i = 0; i < allEnemies.length; i++) {
             if((between(allEnemies[i].x, player.x - 50, player.x + 50)) && (between(allEnemies[i].y, player.y - 50, player.y + 50))) {
-                console.log('error');
+                reset('gameOver');
+                player.x = 202;
+                player.y = 400;
             }
         }
     }
@@ -193,7 +195,7 @@ var Engine = (function(global) {
             ctx.globalAlpha = 1;
             ctx.font = '30px serif';
             ctx.fillStyle = 'white'
-            ctx.fillText('press any key to continue', 100, 550);
+            ctx.fillText('press an arrow key to continue', 75, 550);
         }
         
         switch(state) {
@@ -209,7 +211,7 @@ var Engine = (function(global) {
                 on();
                 
                 ctx.font = '55px serif';
-                ctx.fillText('Game Over', 100, 300);
+                ctx.fillText('Game Over', 125, 300);
                 break;
             case 'gameWon' : 
                 on();
@@ -233,13 +235,14 @@ var Engine = (function(global) {
     }
     
     var resetInput = function(keyPress) {
-        if(keyPress === 27) {
+        if(keyPress === 'escape') {
             reset('gamePaused');
             console.log('bs');
         }
 
         else if(keyPress !== undefined && keyPress !== 27) {
             reset('off');
+            console.log(keyPress);
         }
     }
 

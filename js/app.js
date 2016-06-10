@@ -35,7 +35,6 @@ Enemy.prototype.render = function() {
 // a handleInput() method.    }
 
 
-
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [];
@@ -56,7 +55,10 @@ var player = {
         if(this.x < 0) {this.x = 404}
         else if(this.x > 404) {this.x = 0}
         //y bounds reset
-        if(this.y <= 0) {this.y = 400}
+        if(this.y <= 0) {
+            reset('gameWon');
+            this.y = 400
+        }
         else if(this.y > 400) {this.y = 400}
     },
     
