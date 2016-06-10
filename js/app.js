@@ -1,11 +1,6 @@
 // Enemies our player must avoid
 var Enemy = function(x, y) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-    //console.log(x, y);
-    //console.log(Enemy.render);
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+    //shared variables for all enemies
     this.sprite = 'images/enemy-bug.png';
     this.x = x;
     this.y = y;
@@ -21,11 +16,6 @@ Enemy.prototype.update = function(dt) {
     } else if (this.x > 404) {
         this.x = 0;
     }
-    //console.log(this.x, this.y);
-
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
 };
 
 // Draw the enemy on the screen, required method for game
@@ -33,13 +23,7 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.    }
-
-
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
+// all enemy objects in an array called allEnemies
 var allEnemies = [];
 
 var bug1 = new Enemy(101, 68);
@@ -53,11 +37,11 @@ var player = {
     y: 400,
 
     'update': function() {
-        //console.log(this.x, this.y);
         //x bounds reset
         if (this.x < 0) {
             this.x = 404;
-        } else if (this.x > 404) {
+        }
+        else if (this.x > 404) {
             this.x = 0;
         }
         //y bounds reset
@@ -65,7 +49,8 @@ var player = {
             reset('gameWon');
             this.y = 400;
             this.x = 202;
-        } else if (this.y > 400) {
+        } 
+        else if (this.y > 400) {
             this.y = 400;
         }
     },
@@ -77,19 +62,15 @@ var player = {
     'handleInput': function(keyPress) {
         switch (keyPress) {
             case 'left':
-                console.log('I pressed the left key');
                 this.x -= 101;
                 break;
             case 'up':
-                console.log('I pressed the up key');
                 this.y -= 83;
                 break;
             case 'right':
-                console.log('I pressed the right key');
                 this.x += 101;
                 break;
             case 'down':
-                console.log('I pressed the down key');
                 this.y += 83;
                 break;
         }
@@ -98,6 +79,7 @@ var player = {
 
 var lastState = undefined;
 
+//the reset function handles a 'menu screen' by states passed to it from elsewhere
 function reset(state) {
     //this keeps the last state that was sent to the reset function or stores a new state
     if (state === undefined) {
@@ -154,13 +136,12 @@ function reset(state) {
     }
 }
 
+//handles the pause menu and turns off menus when an input is recieved
 var resetInput = function(keyPress) {
     if (keyPress === 'escape') {
         reset('gamePaused');
-        console.log('bs');
     } else if (keyPress !== undefined && keyPress !== 27) {
         reset('off');
-        console.log(keyPress);
     }
 };
 
