@@ -13,7 +13,6 @@
  * the canvas' context (ctx) object globally available to make writing app.js
  * a little simpler to work with.
  */
-
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
@@ -88,10 +87,10 @@ var Engine = (function(global) {
         function between(x, min, max) {
             return x >= min && x <= max;
         }
-        
+
         //loops through the allEnemies array and checks the players position against the enemies, using a range given to the between function above
-        for(var i = 0; i < allEnemies.length; i++) {
-            if((between(allEnemies[i].x, player.x - 50, player.x + 50)) && (between(allEnemies[i].y, player.y - 50, player.y + 50))) {
+        for (var i = 0; i < allEnemies.length; i++) {
+            if ((between(allEnemies[i].x, player.x - 50, player.x + 50)) && (between(allEnemies[i].y, player.y - 50, player.y + 50))) {
                 reset('gameOver');
                 player.x = 202;
                 player.y = 400;
@@ -124,12 +123,12 @@ var Engine = (function(global) {
          * for that particular row of the game level.
          */
         var rowImages = [
-                'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
+                'images/water-block.png', // Top row is water
+                'images/stone-block.png', // Row 1 of 3 of stone
+                'images/stone-block.png', // Row 2 of 3 of stone
+                'images/stone-block.png', // Row 3 of 3 of stone
+                'images/grass-block.png', // Row 1 of 2 of grass
+                'images/grass-block.png' // Row 2 of 2 of grass
             ],
             numRows = 6,
             numCols = 5,
@@ -170,82 +169,6 @@ var Engine = (function(global) {
         player.render();
     }
 
-    /* This function does nothing but it could have been a good place to
-     * handle game reset states - maybe a new game menu or a game over screen
-     * those sorts of things. It's only called once by the init() method.
-     */
-    var lastState = undefined;
-    
-    function reset(state) {
-        //this keeps the last state that was sent to the reset function or stores a new state
-        if(state === undefined) {
-            state = lastState
-        }
-        
-        else {
-            lastState = state;
-        }
-        
-        //shared variables for when the overlay is on
-        var on = function() {
-            ctx.globalAlpha = 0.7;
-            ctx.fillStyle = 'black';
-            ctx.fillRect(0, 48, 505, 550)
-            
-            ctx.globalAlpha = 1;
-            ctx.font = '30px serif';
-            ctx.fillStyle = 'white'
-            ctx.fillText('press an arrow key to continue', 75, 550);
-        }
-        
-        switch(state) {
-            case 'gameStart' : 
-                on();
-                
-                ctx.fillText('Good Luck', 185, 350);
-                
-                ctx.font = '55px serif';
-                ctx.fillText('Welcome', 152, 300);
-                break;
-            case 'gameOver' : 
-                on();
-                
-                ctx.font = '55px serif';
-                ctx.fillText('Game Over', 125, 300);
-                break;
-            case 'gameWon' : 
-                on();
-                
-                ctx.fillText('You Won', 185, 350);
-                
-                ctx.font = '55px serif';
-                ctx.fillText('Congratulations', 152, 300);
-                break;
-            case 'gamePaused' : 
-                on();
-                
-                ctx.font = '55px serif';
-                ctx.fillText('Paused', 175, 300);
-                break;
-            case 'off' : 
-                ctx.font = '20px serif';
-                ctx.fillText('press escape to pause', 10, 100);
-                break;
-        }
-    }
-    
-    var resetInput = function(keyPress) {
-        if(keyPress === 'escape') {
-            reset('gamePaused');
-            console.log('bs');
-        }
-
-        else if(keyPress !== undefined && keyPress !== 27) {
-            reset('off');
-            console.log(keyPress);
-        }
-    }
-
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
@@ -264,18 +187,4 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
-    
-    document.addEventListener('keyup', function(e) {
-        var allowedKeys = {
-            37: 'left',
-            38: 'up',
-            39: 'right',
-            40: 'down',
-            27: 'escape'
-        };
-        
-        resetInput(allowedKeys[e.keyCode]);
-        player.handleInput(allowedKeys[e.keyCode]);
-        
-    });
 })(this);
