@@ -1,25 +1,25 @@
 //layed out grid to make code more readable
 var canvasGrid = {
-    xblock : 101,
-    yblock : 83,
+    xblock: 101,
+    yblock: 83,
     //x coordinates
-    x : [
-        0,//0 
-        101,//1 
-        202,//2 
-        303,//3
-        404.//4
+    x: [
+        0, //0 
+        101, //1 
+        202, //2 
+        303, //3
+        404 //4
     ],
     //y coordinates
-    y : [ 
-        0,//0 
-        68,//1
-        151,//2
-        234,//3
-        317,//4
-        400//5
+    y: [
+        0, //0 
+        68, //1
+        151, //2
+        234, //3
+        317, //4
+        400 //5
     ]
-}
+};
 
 // Enemies our Player must avoid
 var Enemy = function(x, y, velocity) {
@@ -34,13 +34,12 @@ var Enemy = function(x, y, velocity) {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
     this.x = this.x + (this.velocity * dt);
-    
-    
+
+
     //x bounds reset
     if (this.x < canvasGrid.x[0]) {
         this.x = canvasGrid.x[4];
-    } 
-    else if (this.x > canvasGrid.x[4]) {
+    } else if (this.x > canvasGrid.x[4]) {
         this.x = canvasGrid.x[0];
     }
 };
@@ -67,7 +66,7 @@ var Player = {
     y: canvasGrid.y[5],
 
     //the reset function handles a 'menu screen' by states passed to it from elsewhere
-    'reset' : function(state) {
+    'reset': function(state) {
         //this keeps the last state that was sent to the reset function or stores a new state
         if (state === undefined) {
             state = lastState;
@@ -129,8 +128,7 @@ var Player = {
         //x bounds reset
         if (this.x < canvasGrid.x[0]) {
             this.x = canvasGrid.x[4];
-        }
-        else if (this.x > canvasGrid.x[4]) {
+        } else if (this.x > canvasGrid.x[4]) {
             this.x = canvasGrid.x[0];
         }
         //y bounds reset
@@ -138,8 +136,7 @@ var Player = {
             Player.reset('gameWon');
             this.y = canvasGrid.y[5];
             this.x = canvasGrid.x[2];
-        } 
-        else if (this.y > canvasGrid.y[5]) {
+        } else if (this.y > canvasGrid.y[5]) {
             this.y = canvasGrid.y[5];
         }
     },
