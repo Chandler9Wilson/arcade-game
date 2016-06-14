@@ -1,3 +1,26 @@
+//layed out grid to make code more readable
+var canvasGrid = {
+    xblock : 101,
+    yblock : 83,
+    //x coordinates
+    x : [
+        0,//0 
+        101,//1 
+        202,//2 
+        303,//3
+        404.//4
+    ],
+    //y coordinates
+    y : [ 
+        0,//0 
+        68,//1
+        151,//2
+        234,//3
+        317,//4
+        400//5
+    ]
+}
+
 // Enemies our player must avoid
 var Enemy = function(x, y, velocity) {
     //shared variables for all enemies
@@ -14,11 +37,11 @@ Enemy.prototype.update = function(dt) {
     
     
     //x bounds reset
-    if (this.x < 0) {
-        this.x = 404;
+    if (this.x < canvasGrid.x[0]) {
+        this.x = canvasGrid.x[4];
     } 
-    else if (this.x > 404) {
-        this.x = 0;
+    else if (this.x > canvasGrid.x[4]) {
+        this.x = canvasGrid.x[0];
     }
 };
 
@@ -30,32 +53,32 @@ Enemy.prototype.render = function() {
 // all enemy objects in an array called allEnemies
 var allEnemies = [];
 
-var bug1 = new Enemy(101, 68, 70);
-var bug2 = new Enemy(0, 151, -75);
+var bug1 = new Enemy(canvasGrid.x[1], canvasGrid.y[1], 70);
+var bug2 = new Enemy(canvasGrid.x[4], canvasGrid.y[2], -75);
 allEnemies.push(bug1, bug2);
 
 // Place the player object in a variable called player
 var player = {
     //initial player position
-    x: 202,
-    y: 400,
+    x: canvasGrid.x[2],
+    y: canvasGrid.y[5],
 
     'update': function() {
         //x bounds reset
-        if (this.x < 0) {
-            this.x = 404;
+        if (this.x < canvasGrid.x[0]) {
+            this.x = canvasGrid.x[4];
         }
-        else if (this.x > 404) {
-            this.x = 0;
+        else if (this.x > canvasGrid.x[4]) {
+            this.x = canvasGrid.x[0];
         }
         //y bounds reset
-        if (this.y <= 0) {
+        if (this.y <= canvasGrid.y[0]) {
             reset('gameWon');
-            this.y = 400;
-            this.x = 202;
+            this.y = canvasGrid.y[5];
+            this.x = canvasGrid.x[2];
         } 
-        else if (this.y > 400) {
-            this.y = 400;
+        else if (this.y > canvasGrid.y[5]) {
+            this.y = canvasGrid.y[5];
         }
     },
 
@@ -66,16 +89,16 @@ var player = {
     'handleInput': function(keyPress) {
         switch (keyPress) {
             case 'left':
-                this.x -= 101;
+                this.x -= canvasGrid.xblock;
                 break;
             case 'up':
-                this.y -= 83;
+                this.y -= canvasGrid.yblock;
                 break;
             case 'right':
-                this.x += 101;
+                this.x += canvasGrid.xblock;
                 break;
             case 'down':
-                this.y += 83;
+                this.y += canvasGrid.yblock;
                 break;
         }
     }
@@ -94,8 +117,10 @@ function reset(state) {
 
     //shared variables for when the overlay is on
     var on = function() {
+        //Transparency value
         ctx.globalAlpha = 0.7;
         ctx.fillStyle = 'black';
+        //fills the entire canvas
         ctx.fillRect(0, 48, 505, 550);
 
         ctx.globalAlpha = 1;

@@ -92,8 +92,8 @@ var Engine = (function(global) {
         for (var i = 0; i < allEnemies.length; i++) {
             if ((between(allEnemies[i].x, player.x - 50, player.x + 50)) && (between(allEnemies[i].y, player.y - 50, player.y + 50))) {
                 reset('gameOver');
-                player.x = 202;
-                player.y = 400;
+                player.x = canvasGrid.x[2];
+                player.y = canvasGrid.y[5];
             }
         }
     }
