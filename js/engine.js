@@ -1,10 +1,10 @@
 /* Engine.js
  * This file provides the game loop functionality (update entities and render),
  * draws the initial game board on the screen, and then calls the update and
- * render methods on your player and enemy objects (defined in your app.js).
+ * render methods on your Player and enemy objects (defined in your app.js).
  *
  * A game engine works by drawing the entire game screen over and over, kind of
- * like a flipbook you may have created as a kid. When your player moves across
+ * like a flipbook you may have created as a kid. When your Player moves across
  * the screen, it may look like just that image/character is moving or being
  * drawn but that is not the case. What's really happening is the entire "scene"
  * is being drawn over and over, presenting the illusion of animation.
@@ -46,7 +46,7 @@ var Engine = (function(global) {
          */
         update(dt);
         render();
-        reset();
+        Player.reset();
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
@@ -64,7 +64,7 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        reset('gameStart');
+        Player.reset('gameStart');
         lastTime = Date.now();
         main();
     }
@@ -88,12 +88,12 @@ var Engine = (function(global) {
             return x >= min && x <= max;
         }
 
-        //loops through the allEnemies array and checks the players position against the enemies, using a range given to the between function above
+        //loops through the allEnemies array and checks the Players position against the enemies, using a range given to the between function above
         for (var i = 0; i < allEnemies.length; i++) {
-            if ((between(allEnemies[i].x, player.x - 50, player.x + 50)) && (between(allEnemies[i].y, player.y - 50, player.y + 50))) {
-                reset('gameOver');
-                player.x = canvasGrid.x[2];
-                player.y = canvasGrid.y[5];
+            if ((between(allEnemies[i].x, Player.x - 50, Player.x + 50)) && (between(allEnemies[i].y, Player.y - 50, Player.y + 50))) {
+                Player.reset('gameOver');
+                Player.x = canvasGrid.x[2];
+                Player.y = canvasGrid.y[5];
             }
         }
     }
@@ -101,7 +101,7 @@ var Engine = (function(global) {
     /* This is called by the update function and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
      * their update() methods. It will then call the update function for your
-     * player object. These update methods should focus purely on updating
+     * Player object. These update methods should focus purely on updating
      * the data/properties related to the object. Do your drawing in your
      * render methods.
      */
@@ -109,7 +109,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        player.update();
+        Player.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -156,7 +156,7 @@ var Engine = (function(global) {
 
     /* This function is called by the render function and is called on each game
      * tick. Its purpose is to then call the render functions you have defined
-     * on your enemy and player entities within app.js
+     * on your enemy and Player entities within app.js
      */
     function renderEntities() {
         /* Loop through all of the objects within the allEnemies array and call
@@ -166,7 +166,7 @@ var Engine = (function(global) {
             enemy.render();
         });
 
-        player.render();
+        Player.render();
     }
 
     /* Go ahead and load all of the images we know we're going to need to

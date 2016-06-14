@@ -1,3 +1,3 @@
 #Arcade Game
 
-##To play, download project and open `index.html` in any browser
+##To start the game, download the project and open `index.html` in any browser
