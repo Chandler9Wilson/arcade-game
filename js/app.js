@@ -59,128 +59,89 @@ allEnemies.push(bug1, bug2);
 //used in the player.reset function
 var lastState = undefined;
 
-// Place the Player object in a variable called Player
-var Player = {
-    //initial Player position
-    x: canvasGrid.x[2],
-    y: canvasGrid.y[5],
+var Player = function(initialX, initalY, sprite) {
+    this.x = initialX;
+    this.y = initalY;
+    this.sprite = sprite;
 
-    //the reset function handles a 'menu screen' by states passed to it from elsewhere
-    'reset': function(state) {
-        //this keeps the last state that was sent to the reset function or stores a new state
-        if (state === undefined) {
-            state = lastState;
-        } else {
-            lastState = state;
-        }
+    this.initialX = initialX;
+    this.initialY = initalY;
+}
 
-        //shared variables for when the overlay is on
-        var on = function() {
-            //Transparency value
-            ctx.globalAlpha = 0.7;
-            ctx.fillStyle = 'black';
-            //fills the entire canvas
-            ctx.fillRect(0, 48, 505, 550);
+Player.prototype.update = function() {
+    //x bounds reset
+    if (this.x < canvasGrid.x[0]) {
+        this.x = canvasGrid.x[4];
+    } else if (this.x > canvasGrid.x[4]) {
+        this.x = canvasGrid.x[0];
+    }
+    //y bounds reset
+    if (this.y <= canvasGrid.y[0]) {
+        allPlayers.forEach(function(player) {
+            player.y = player.initialY;
+            player.x = player.initialX;
+        });
+    } else if (this.y > canvasGrid.y[5]) {
+        this.y = canvasGrid.y[5];
+    }
+}
 
-            ctx.globalAlpha = 1;
-            ctx.font = '30px serif';
-            ctx.fillStyle = 'white';
-            ctx.fillText('press an arrow key to continue', 75, 550);
-        };
+Player.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}
 
-        switch (state) {
-            case 'gameStart':
-                on();
-
-                ctx.fillText('Good Luck', 185, 350);
-
-                ctx.font = '55px serif';
-                ctx.fillText('Welcome', 152, 300);
-                break;
-            case 'gameOver':
-                on();
-
-                ctx.font = '55px serif';
-                ctx.fillText('Game Over', 125, 300);
-                break;
-            case 'gameWon':
-                on();
-
-                ctx.fillText('You Won', 195, 350);
-
-                ctx.font = '55px serif';
-                ctx.fillText('Congratulations', 75, 300);
-                break;
-            case 'gamePaused':
-                on();
-
-                ctx.font = '55px serif';
-                ctx.fillText('Paused', 175, 300);
-                break;
-            case 'off':
-                ctx.font = '20px serif';
-                ctx.fillText('press escape to pause', 10, 100);
-                break;
-        }
-    },
-
-    'update': function() {
-        //x bounds reset
-        if (this.x < canvasGrid.x[0]) {
-            this.x = canvasGrid.x[4];
-        } else if (this.x > canvasGrid.x[4]) {
-            this.x = canvasGrid.x[0];
-        }
-        //y bounds reset
-        if (this.y <= canvasGrid.y[0]) {
-            Player.reset('gameWon');
-            this.y = canvasGrid.y[5];
-            this.x = canvasGrid.x[2];
-        } else if (this.y > canvasGrid.y[5]) {
-            this.y = canvasGrid.y[5];
-        }
-    },
-
-    'render': function() {
-        ctx.drawImage(Resources.get('images/char-boy.png'), this.x, this.y);
-    },
-
-    'handleInput': function(keyPress) {
+Player.prototype.handleInput = function(keyPress, index) {
+    if(index === 0) {
         switch (keyPress) {
-            case 'left':
-                this.x -= canvasGrid.xblock;
-                break;
-            case 'up':
-                this.y -= canvasGrid.yblock;
-                break;
-            case 'right':
-                this.x += canvasGrid.xblock;
-                break;
-            case 'down':
-                this.y += canvasGrid.yblock;
-                break;
+                case 'leftOne':
+                    this.x -= canvasGrid.xblock;
+                    break;
+                case 'upOne':
+                    this.y -= canvasGrid.yblock;
+                    break;
+                case 'rightOne':
+                    this.x += canvasGrid.xblock;
+                    break;
+                case 'downOne':
+                    this.y += canvasGrid.yblock;
+                    break;
+            }
+    }
+    else if(index === 1) {
+        switch (keyPress) {
+                case 'leftTwo':
+                    this.x -= canvasGrid.xblock;
+                    break;
+                case 'upTwo':
+                    this.y -= canvasGrid.yblock;
+                    break;
+                case 'rightTwo':
+                    this.x += canvasGrid.xblock;
+                    break;
+                case 'downTwo':
+                    this.y += canvasGrid.yblock;
+                    break;
+            }
+    }
+}
+
+//array of players
+allPlayers = [];
+
+//determines the number of players to push to allPlayers based on user input
+var playerSet = function(keyPress) {
+    if(allPlayers.length === 0) {
+        if(keyPress === 'one') {
+            var player1 = new Player(canvasGrid.x[2], canvasGrid.y[5], 'images/char-boy.png');
+
+            allPlayers.push(player1);
+        }
+
+        else if(keyPress === 'two') {
+            var player1 = new Player(canvasGrid.x[3], canvasGrid.y[5], 'images/char-boy.png');
+            var player2 = new Player(canvasGrid.x[1], canvasGrid.y[5], 'images/char-cat-girl.png');
+
+            allPlayers.push(player1, player2);
         }
     }
-};
-
-//handles the pause menu and turns off menus when an input is recieved
-var resetInput = function(keyPress) {
-    if (keyPress === 'escape') {
-        Player.reset('gamePaused');
-    } else if (keyPress !== undefined && keyPress !== 27) {
-        Player.reset('off');
-    }
-};
-
-document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down',
-        27: 'escape'
-    };
-
-    resetInput(allowedKeys[e.keyCode]);
-    Player.handleInput(allowedKeys[e.keyCode]);
-});
+}

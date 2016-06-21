@@ -14,6 +14,8 @@
  * a little simpler to work with.
  */
 var Engine = (function(global) {
+    var lastState = undefined;
+    
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
@@ -41,12 +43,14 @@ var Engine = (function(global) {
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
-        /* Call our update/render functions, pass along the time delta to
-         * our update function since it may be used for smooth animation.
-         */
-        update(dt);
+        if(lastState === 'off') {
+            /* Call our update/render functions, pass along the time delta to
+            * our update function since it may be used for smooth animation.
+            */
+            update(dt);
+        }
         render();
-        Player.reset();
+        reset();
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
@@ -64,10 +68,86 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        Player.reset('gameStart');
+        reset('gameStart');
         lastTime = Date.now();
         main();
     }
+    
+    //the reset function handles a 'menu screen' by states passed to it from elsewhere
+    var reset = function(state) {
+        //this keeps the last state that was sent to the reset function or stores a new state
+        if (state === undefined) {
+            state = lastState;
+        } else {
+            lastState = state;
+        }
+
+        //shared variables for when the overlay is on
+        var on = function() {
+            //Transparency value
+            ctx.globalAlpha = 0.7;
+            ctx.fillStyle = 'black';
+            //fills the entire canvas
+            ctx.fillRect(0, 48, 505, 550);
+
+            ctx.globalAlpha = 1;
+            ctx.font = '30px serif';
+            ctx.fillStyle = 'white';
+            ctx.fillText('press an allowed key to continue', 65, 550);
+        };
+
+        switch (state) {
+            case 'gameStart':
+                on();
+
+                ctx.fillText('One or Two Players?', 130, 350);
+
+                ctx.font = '55px serif';
+                ctx.fillText('Welcome', 152, 300);
+                break;
+            case 'gameOver':
+                on();
+
+                ctx.font = '55px serif';
+                ctx.fillText('Game Over', 125, 300);
+                break;
+            case 'player1Won':
+                on();
+
+                ctx.fillText('Player 1 Wins', 160, 350);
+
+                ctx.font = '55px serif';
+                ctx.fillText('Congratulations', 75, 300);
+                break;
+            case 'player2Won':
+                on();
+
+                ctx.fillText('Player 2 Wins', 160, 350);
+
+                ctx.font = '55px serif';
+                ctx.fillText('Congratulations', 75, 300);
+                break;
+            case 'gamePaused':
+                on();
+
+                ctx.font = '55px serif';
+                ctx.fillText('Paused', 175, 300);
+                break;
+            case 'off':
+                ctx.font = '20px serif';
+                ctx.fillText('press escape to pause', 10, 100);
+                break;
+        }
+    }
+
+    //handles the pause menu and turns off menus when an input is recieved
+    var resetInput = function(keyPress) {
+        if (keyPress === 'pause') {
+            reset('gamePaused');
+        } else if (keyPress !== undefined && keyPress !== 27) {
+            reset('off');
+        }
+    };
 
     /* This function is called by main (our game loop) and itself calls all
      * of the functions which may need to update entity's data. Based on how
@@ -79,8 +159,21 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
+        checkWin();
         updateEntities(dt);
         checkCollisions();
+    }
+
+    function checkWin() {
+        allPlayers.forEach(function(player, index) {
+            if(player.y <= canvasGrid.x[0]) {
+                if(index === 0) {
+                    reset('player1Won');
+                } else if(index === 1) {
+                    reset('player2Won');
+                }
+            }
+        });
     }
 
     function checkCollisions() {
@@ -90,11 +183,15 @@ var Engine = (function(global) {
 
         //loops through the allEnemies array and checks the Players position against the enemies, using a range given to the between function above
         for (var i = 0; i < allEnemies.length; i++) {
-            if ((between(allEnemies[i].x, Player.x - 50, Player.x + 50)) && (between(allEnemies[i].y, Player.y - 50, Player.y + 50))) {
-                Player.reset('gameOver');
-                Player.x = canvasGrid.x[2];
-                Player.y = canvasGrid.y[5];
-            }
+            allPlayers.forEach(function(player) {
+                if ((between(allEnemies[i].x, player.x - 50, player.x + 50)) && (between(allEnemies[i].y, player.y - 50, player.y + 50))) {
+                    reset('gameOver');
+                    allPlayers.forEach(function(resetPlayer) {
+                        resetPlayer.x = resetPlayer.initialX;
+                        resetPlayer.y = resetPlayer.initialY;
+                    });
+                }
+            });
         }
     }
 
@@ -109,7 +206,10 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        Player.update();
+        
+        allPlayers.forEach(function(player) {
+            player.update();
+        });
     }
 
     /* This function initially draws the "game level", it will then call
@@ -165,8 +265,10 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
-        Player.render();
+        
+        allPlayers.forEach(function(player) {
+            player.render();
+        });
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -178,7 +280,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-cat-girl.png'
     ]);
     Resources.onReady(init);
 
@@ -187,4 +290,26 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+
+    document.addEventListener('keyup', function(e) {
+    var allowedKeys = {
+        37: 'leftOne', //left arrow
+        38: 'upOne', //up arrow
+        39: 'rightOne', //right arrow
+        40: 'downOne', //down arrow
+        87: 'upTwo', //w
+        65: 'leftTwo', //a
+        83: 'downTwo', //s
+        68: 'rightTwo', //d
+        27: 'pause', //escape
+        49: 'one', //1
+        50: 'two' //2
+    };
+
+    playerSet(allowedKeys[e.keyCode]);
+    resetInput(allowedKeys[e.keyCode]);
+    allPlayers.forEach(function(player, index) {
+            player.handleInput(allowedKeys[e.keyCode], index);
+    });
+});
 })(this);
