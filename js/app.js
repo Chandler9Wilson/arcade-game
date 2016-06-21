@@ -56,9 +56,6 @@ var bug1 = new Enemy(canvasGrid.x[1], canvasGrid.y[1], 70);
 var bug2 = new Enemy(canvasGrid.x[4], canvasGrid.y[2], -75);
 allEnemies.push(bug1, bug2);
 
-//used in the player.reset function
-var lastState = undefined;
-
 var Player = function(initialX, initalY, sprite) {
     this.x = initialX;
     this.y = initalY;
@@ -66,7 +63,7 @@ var Player = function(initialX, initalY, sprite) {
 
     this.initialX = initialX;
     this.initialY = initalY;
-}
+};
 
 Player.prototype.update = function() {
     //x bounds reset
@@ -84,64 +81,61 @@ Player.prototype.update = function() {
     } else if (this.y > canvasGrid.y[5]) {
         this.y = canvasGrid.y[5];
     }
-}
+};
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 Player.prototype.handleInput = function(keyPress, index) {
-    if(index === 0) {
+    if (index === 0) {
         switch (keyPress) {
-                case 'leftOne':
-                    this.x -= canvasGrid.xblock;
-                    break;
-                case 'upOne':
-                    this.y -= canvasGrid.yblock;
-                    break;
-                case 'rightOne':
-                    this.x += canvasGrid.xblock;
-                    break;
-                case 'downOne':
-                    this.y += canvasGrid.yblock;
-                    break;
-            }
-    }
-    else if(index === 1) {
+            case 'leftOne':
+                this.x -= canvasGrid.xblock;
+                break;
+            case 'upOne':
+                this.y -= canvasGrid.yblock;
+                break;
+            case 'rightOne':
+                this.x += canvasGrid.xblock;
+                break;
+            case 'downOne':
+                this.y += canvasGrid.yblock;
+                break;
+        }
+    } else if (index === 1) {
         switch (keyPress) {
-                case 'leftTwo':
-                    this.x -= canvasGrid.xblock;
-                    break;
-                case 'upTwo':
-                    this.y -= canvasGrid.yblock;
-                    break;
-                case 'rightTwo':
-                    this.x += canvasGrid.xblock;
-                    break;
-                case 'downTwo':
-                    this.y += canvasGrid.yblock;
-                    break;
-            }
+            case 'leftTwo':
+                this.x -= canvasGrid.xblock;
+                break;
+            case 'upTwo':
+                this.y -= canvasGrid.yblock;
+                break;
+            case 'rightTwo':
+                this.x += canvasGrid.xblock;
+                break;
+            case 'downTwo':
+                this.y += canvasGrid.yblock;
+                break;
+        }
     }
-}
+};
 
 //array of players
 allPlayers = [];
 
 //determines the number of players to push to allPlayers based on user input
 var playerSet = function(keyPress) {
-    if(allPlayers.length === 0) {
-        if(keyPress === 'one') {
+    if (allPlayers.length === 0) {
+        if (keyPress === 'one') {
             var player1 = new Player(canvasGrid.x[2], canvasGrid.y[5], 'images/char-boy.png');
 
             allPlayers.push(player1);
-        }
-
-        else if(keyPress === 'two') {
+        } else if (keyPress === 'two') {
             var player1 = new Player(canvasGrid.x[3], canvasGrid.y[5], 'images/char-boy.png');
             var player2 = new Player(canvasGrid.x[1], canvasGrid.y[5], 'images/char-cat-girl.png');
 
             allPlayers.push(player1, player2);
         }
     }
-}
+};

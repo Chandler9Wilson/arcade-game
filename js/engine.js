@@ -15,7 +15,7 @@
  */
 var Engine = (function(global) {
     var lastState = undefined;
-    
+
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
@@ -43,10 +43,10 @@ var Engine = (function(global) {
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
-        if(lastState === 'off') {
+        if (lastState === 'off') {
             /* Call our update/render functions, pass along the time delta to
-            * our update function since it may be used for smooth animation.
-            */
+             * our update function since it may be used for smooth animation.
+             */
             update(dt);
         }
         render();
@@ -72,7 +72,7 @@ var Engine = (function(global) {
         lastTime = Date.now();
         main();
     }
-    
+
     //the reset function handles a 'menu screen' by states passed to it from elsewhere
     var reset = function(state) {
         //this keeps the last state that was sent to the reset function or stores a new state
@@ -138,7 +138,7 @@ var Engine = (function(global) {
                 ctx.fillText('press escape to pause', 10, 100);
                 break;
         }
-    }
+    };
 
     //handles the pause menu and turns off menus when an input is recieved
     var resetInput = function(keyPress) {
@@ -166,10 +166,10 @@ var Engine = (function(global) {
 
     function checkWin() {
         allPlayers.forEach(function(player, index) {
-            if(player.y <= canvasGrid.x[0]) {
-                if(index === 0) {
+            if (player.y <= canvasGrid.x[0]) {
+                if (index === 0) {
                     reset('player1Won');
-                } else if(index === 1) {
+                } else if (index === 1) {
                     reset('player2Won');
                 }
             }
@@ -206,7 +206,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        
+
         allPlayers.forEach(function(player) {
             player.update();
         });
@@ -265,7 +265,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-        
+
         allPlayers.forEach(function(player) {
             player.render();
         });
@@ -292,24 +292,24 @@ var Engine = (function(global) {
     global.ctx = ctx;
 
     document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
-        37: 'leftOne', //left arrow
-        38: 'upOne', //up arrow
-        39: 'rightOne', //right arrow
-        40: 'downOne', //down arrow
-        87: 'upTwo', //w
-        65: 'leftTwo', //a
-        83: 'downTwo', //s
-        68: 'rightTwo', //d
-        27: 'pause', //escape
-        49: 'one', //1
-        50: 'two' //2
-    };
+        var allowedKeys = {
+            37: 'leftOne', //left arrow
+            38: 'upOne', //up arrow
+            39: 'rightOne', //right arrow
+            40: 'downOne', //down arrow
+            87: 'upTwo', //w
+            65: 'leftTwo', //a
+            83: 'downTwo', //s
+            68: 'rightTwo', //d
+            27: 'pause', //escape
+            49: 'one', //1
+            50: 'two' //2
+        };
 
-    playerSet(allowedKeys[e.keyCode]);
-    resetInput(allowedKeys[e.keyCode]);
-    allPlayers.forEach(function(player, index) {
+        playerSet(allowedKeys[e.keyCode]);
+        resetInput(allowedKeys[e.keyCode]);
+        allPlayers.forEach(function(player, index) {
             player.handleInput(allowedKeys[e.keyCode], index);
+        });
     });
-});
 })(this);
